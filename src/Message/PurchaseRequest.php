@@ -10,6 +10,8 @@
 
 namespace Omnipay\FreeKassa\Message;
 
+use Money\Currency;
+
 class PurchaseRequest extends AbstractRequest
 {
     public function getData()
@@ -19,11 +21,17 @@ class PurchaseRequest extends AbstractRequest
             'amount', 'currency', 'transactionId'
         );
 
+        if (!empty($this->getPs())){
+            $i = $this->getPs();
+        }else{
+            $i = strtolower($this->getCurrency());
+        }
+
         return array_filter([
             'm' => $this->getPurse(),
             'oa' => $this->getAmount(),
             'o' => $this->getTransactionId(),
-            'i' => strtolower($this->getCurrency()),
+            'i' => $i,
             's' => $this->calculateSignature(),
             'lang' => $this->getLanguage(),
             'em' => $this->getEmail()
